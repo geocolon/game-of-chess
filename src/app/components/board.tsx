@@ -1,6 +1,6 @@
 "use client";
 import {Move} from 'chess.js';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {p0, pw, pb, chess, getBoard} from '../utils/chess-utils';
 import { calculateBestMove, initGame } from 'chess-ai';
 import styles from './board.module.scss';
@@ -10,16 +10,22 @@ import Loader from './loader';
 const Board = () => {
 
     const [pieces, setPieces] = useState(
-        new Array(8)
-        .fill(0).map(() => 
-            new Array(8)
-            .fill('')
-        ));
+        new Array(8).fill(0).map(() => new Array(8).fill(''))
+        );
+    const workerRef = useRef<Worker>();    
     const [highlighted, setHighlighted] = useState<string[]>([]);
     const [isLoading, setLoading] = useState(false);
     useEffect(() => {
+        workerRef.current = new Worker(new URL('../utils/worker.ts', import.meta.url));
+        workerRef.current.onmessage = (e: MessageEvent) => {
+            console.log('Message from Board UI.', e);
+        }
+        workerRef.current.postMessage('Hello from Board UI');
         initGame(chess, 1);
         setPieces(getBoard());
+        return () => {
+            workerRef.current?.terminate();
+        }
     }, []);
   return (
     <div className={styles.board}>
