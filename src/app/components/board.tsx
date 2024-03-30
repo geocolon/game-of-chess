@@ -1,9 +1,11 @@
 "use client";
 import {Move} from 'chess.js';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {p0, pw, pb, chess, getBoard} from '../utils/chess-utils';
 import { calculateBestMove, initGame } from 'chess-ai';
 import styles from './board.module.scss';
+import Loader from './loader';
+
 
 const Board = () => {
 
@@ -13,12 +15,24 @@ const Board = () => {
             new Array(8)
             .fill('')
         ));
+    const workerRef = useRef<Worker>();
     const [highlighted, setHighlighted] = useState<string[]>([]);
+    const [isLoading, setLoading] = useState(false);
     useEffect(() => {
+        workerRef.current = new Worker(
+            new URL('../utils/worker.ts', import.meta.url
+        ));
+        workerRef.current.onmessage = (e:MessageEvent) => {
+            console.log('Hello world from worker', e)
+        };
+        workerRef.current.postMessage('Hello world from main thread');
         initGame(chess, 1);
         setPieces(getBoard());
+        return () => {
+            workerRef.current?.terminate();
+        }
     }, []);
-  return (
+    return (
     <div className={styles.board}>
         {new Array(8).fill(0).map((_, i) => (
             <div className={styles.row} key={i}>
@@ -48,11 +62,18 @@ const Board = () => {
                                 onClick={
                                    () => {
                                     if (highlighted.slice(1).includes(square)) {
+                                         // @ts-ignore
                                         chess.move({to: square, from: highlighted[0]});
-                                        const aiMove = calculateBestMove(chess, 1);
-                                        if (aiMove) chess.move(aiMove);
                                         setPieces(getBoard());
-                                        setHighlighted([]);
+                                        setLoading(true);
+                                        setTimeout(() => {
+                                            const aiMove = calculateBestMove(chess, 1);
+                                            if (aiMove) chess.move(aiMove);
+                                            setPieces(getBoard());
+                                            setHighlighted([]);
+                                            setLoading(false);
+                                        }, 0);
+                                        
                                     } else if( p && chess.turn()  == c){
                                         const mvs = chess.moves({
                                             // @ts-ignore
@@ -71,6 +92,7 @@ const Board = () => {
                 )}
             </div>
             ))}
+        <Loader hidden={!isLoading}/>    
     </div>
     );
 }

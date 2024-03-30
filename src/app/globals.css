@@ -76,9 +76,8 @@
 * {
   box-sizing: border-box;
   cursor: default;
-  padding: 0;
-  margin: 0;
 }
+
 
 html,
 body {
@@ -100,6 +99,11 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+[hidden] {
+  display: none !important;
+}
+
 
 @media (prefers-color-scheme: dark) {
   html {
