@@ -17,4 +17,24 @@
    .w {
       background-color: white;
    }
+
 }
+
+// .highlighted 
+   .pointer {
+      cursor: pointer;
+   }
+   .highlighted {
+      position: inherit;
+      &::before {
+         content: '';
+         position: relative;
+         top: 0;
+         right: 0;
+         bottom: 0;
+         left: 0;
+         background-image: radial-gradient(red, transparent, transparent);
+      }
+   }
+
+
