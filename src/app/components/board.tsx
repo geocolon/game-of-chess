@@ -34,9 +34,7 @@ const Board = () => {
                             p = pb[p0.indexOf(p)];
                             c = 'b';
                         }
-                        
                         const square = `${'abcdefgh'.charAt(j)}${8 - i}`;
-
                         return (
                         <div 
                             className={[
@@ -50,8 +48,7 @@ const Board = () => {
                                    () => {
                                     // @ts-ignore
                                     const mvs = chess.moves({square, verbose: true}) as Move[];
-                                    setHighlighted(mvs.map(({to}) => to));
-                                    console.log(mvs);
+                                    setHighlighted([...mvs.map(({to}) => to)]);
                                 
                                 }}
                         >{p}</div>)
