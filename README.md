@@ -13,6 +13,8 @@ pnpm dev
 # or
 bun dev
 ```
+https://github.com/mayank1513/chess-ai 
+https://github.com/jhlywa/chess.js/blob/master/README.md
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

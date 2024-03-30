@@ -828,6 +828,11 @@ chalk@^5.3.0:
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.3.0.tgz#67c20a7ebef70e7f3970a01f90fa210cb6860385"
   integrity sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==
 
+chess-ai@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/chess-ai/-/chess-ai-0.0.2.tgz#1b3f204f0b3f688260f64bde1e1319b2bd0f083b"
+  integrity sha512-i9T8DDWsB+PquSInMXdmQO3NAa0aACG0zxMO8pF79wdo8TWD9qHCzu1ONECW5pGVAoVrbT8e2ktft1QQ90sQJw==
+
 chess.js@^1.0.0-beta.8:
   version "1.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/chess.js/-/chess.js-1.0.0-beta.8.tgz#be5e73eabd49e272f41d26bc7fddc93cbcda912f"

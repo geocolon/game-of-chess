@@ -2,6 +2,7 @@
 import {Move} from 'chess.js';
 import {useEffect, useState} from 'react';
 import {p0, pw, pb, chess, getBoard} from '../utils/chess-utils';
+import { calculateBestMove, initGame } from 'chess-ai';
 import styles from './board.module.scss';
 
 const Board = () => {
@@ -14,6 +15,7 @@ const Board = () => {
         ));
     const [highlighted, setHighlighted] = useState<string[]>([]);
     useEffect(() => {
+        initGame(chess, 1);
         setPieces(getBoard());
     }, []);
   return (
@@ -47,6 +49,8 @@ const Board = () => {
                                    () => {
                                     if (highlighted.slice(1).includes(square)) {
                                         chess.move({to: square, from: highlighted[0]});
+                                        const aiMove = calculateBestMove(chess, 1);
+                                        if (aiMove) chess.move(aiMove);
                                         setPieces(getBoard());
                                         setHighlighted([]);
                                     } else if( p && chess.turn()  == c){
