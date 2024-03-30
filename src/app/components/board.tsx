@@ -13,7 +13,7 @@ const Board = () => {
         new Array(8).fill(0).map(() => new Array(8).fill(''))
         );
     const workerRef = useRef<Worker>();    
-    const [highlighted, setHighlighted] = useState<string[]>([]);
+    const [highlighted, setHighlighted] = useState<string|undefined[]>([]);
     const [isLoading, setLoading] = useState(false);
     useEffect(() => {
         workerRef.current = new Worker(new URL('../utils/worker.ts', import.meta.url));
@@ -51,7 +51,7 @@ const Board = () => {
                                 styles.col, 
                                 (i + j) % 2 === 0 ? styles.w : styles.b,
                                 p && chess.turn() == c && styles.pointer,
-                                highlighted.slice(1).includes(square) && styles.highlighted,
+                                highlighted.includes(square) && styles.highlighted,
                                 ].join(' ')}
                                 key={`${i}, ${j}`}
                                 onClick={
@@ -63,9 +63,11 @@ const Board = () => {
                                         setLoading(true);
                                         setTimeout(() => {
                                             const aiMove = calculateBestMove(chess, 1);
-                                            if (aiMove) chess.move(aiMove);
+                                            if (aiMove) {
+                                                const move = chess.move(aiMove);
                                             setPieces(getBoard());
-                                            setHighlighted([]);
+                                            setHighlighted([move?.to, move?.from]);
+                                            }
                                             setLoading(false);
                                         }, 0);
                                         
