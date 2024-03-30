@@ -25,10 +25,10 @@
    cursor: pointer;
 }
 .highlighted {
-   position: inherit;
+   position: relative;
    &::before {
       content: " ";
-      position: relative;
+      position: absolute;
       top: 0;
       right: 0;
       bottom: 0;
