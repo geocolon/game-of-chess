@@ -15,13 +15,11 @@ type UserController struct {
 	session *mgo.Session
 }
 
-var err error
-
 func NewUserController(s *mgo.Session) *UserController {
 	return &UserController{s}
 }
 
-func (us UserController) GetUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (uc UserController) GetUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id := p.ByName("id")
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
@@ -29,26 +27,28 @@ func (us UserController) GetUser(w http.ResponseWriter, r *http.Request, p httpr
 	}
 	oid := bson.ObjectIdHex(id)
 	u := models.User{}
-	if err := us.session.DB("mongo-golang").C("users").FindId(oid).One(&u); err != nil {
+	var err error                                                                       // Declare the "err" variable
+	if err = uc.session.DB("mongo-golang").C("users").FindId(oid).One(&u); err != nil { // Assign the error to "err"
 		w.WriteHeader(404)
 		return
 	}
 	uj, _ := json.Marshal(u)
-	if err != nil {
+	if err != nil { // Use the "err" variable
 		fmt.Println(err)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", uj)
-	us.session.DB("mongo-golang").C("users").FindId(oid).One(&u)
+	uc.session.DB("mongo-golang").C("users").FindId(oid).One(&u)
 }
 
-func (us UserController) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (uc UserController) CreateUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	u := models.User{}
 	json.NewDecoder(r.Body).Decode(&u)
 	u.ID = bson.NewObjectId()
-	us.session.DB("mongo-golang").C("users").Insert(u)
+	uc.session.DB("mongo-golang").C("users").Insert(u)
 	uj, _ := json.Marshal(u)
+	var err error
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -56,16 +56,15 @@ func (us UserController) CreateUser(w http.ResponseWriter, r *http.Request, _ ht
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, "%s", uj)
 }
-
-func (us UserController) DeleteUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (uc UserController) DeleteUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	id := p.ByName("id")
 	if !bson.IsObjectIdHex(id) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 	oid := bson.ObjectIdHex(id)
-	if err := us.session.DB("mongo-golang").C("users").RemoveId(oid); err != nil {
-		w.WriteHeader(404)
+	if err := uc.session.DB("mongo-golang").C("users").RemoveId(oid); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

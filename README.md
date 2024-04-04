@@ -5,6 +5,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
+nvm use v21.7.1
+
 npm run dev
 # or
 yarn dev
