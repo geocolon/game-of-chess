@@ -1,0 +1,4 @@
+// actionTypes.ts
+export const POST_GAME_REQUEST = 'POST_GAME_REQUEST';
+export const POST_GAME_SUCCESS = 'POST_GAME_SUCCESS';
+export const POST_GAME_FAILURE = 'POST_GAME_FAILURE';
