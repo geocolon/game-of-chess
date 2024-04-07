@@ -22,7 +22,7 @@ export const setPlayerNames = (player1Name: string, player2Name: string) => asyn
       type: SET_PLAYER_NAMES_SUCCESS,
       payload: response.data // Optionally, if the endpoint returns data, you can include it in the payload
     });
-  } catch (error) {
+  } catch (error: any) {
     // Dispatch failure action if request fails
     dispatch({
       type: SET_PLAYER_NAMES_FAILURE,
